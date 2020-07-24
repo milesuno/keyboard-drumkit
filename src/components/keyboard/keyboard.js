@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import "./keyboard.css";
 import clap from "./sounds/clap.wav";
 import hihat from "./sounds/hihat.wav";
@@ -10,93 +10,57 @@ import snare from "./sounds/snare.wav";
 import tom from "./sounds/tom.wav";
 import tink from "./sounds/tink.wav";
 
-export function Keyboard() {
-	return (
-		<>
-			<div class="keys">
-				<div id="a" class="key">
-					<kbd>A</kbd>
-					<span class="sound">clap</span>
-				</div>
-				<div id="s" class="key">
-					<kbd>S</kbd>
-					<span class="sound">hihat</span>
-				</div>
-				<div id="d" class="key">
-					<kbd>D</kbd>
-					<span class="sound">kick</span>
-				</div>
-				<div id="f" class="key">
-					<kbd>F</kbd>
-					<span class="sound">openhat</span>
-				</div>
-				<div id="g" class="key">
-					<kbd>G</kbd>
-					<span class="sound">boom</span>
-				</div>
-				<div id="h" class="key">
-					<kbd>H</kbd>
-					<span class="sound">ride</span>
-				</div>
-				<div id="j" class="key">
-					<kbd>J</kbd>
-					<span class="sound">snare</span>
-				</div>
-				<div id="k" class="key">
-					<kbd>K</kbd>
-					<span class="sound">tom</span>
-				</div>
-				<div id="l" class="key">
-					<kbd>L</kbd>
-					<span class="sound">tink</span>
-				</div>
-			</div>
-			<audio id="65" src={clap}></audio>
-			<audio id="83" src={hihat}></audio>
-			<audio id="68" src={kick}></audio>
-			<audio id="70" src={openhat}></audio>
-			<audio id="71" src={boom}></audio>
-			<audio id="72" src={ride}></audio>
-			<audio id="74" src={snare}></audio>
-			<audio id="75" src={tom}></audio>
-			<audio id="76" src={tink}></audio>
-		</>
-	);
-};
+export class Keyboard extends Component {
+	componentDidMount() {
+		let screenKeys = document.querySelectorAll(".key");
+		window.addEventListener("keydown", this.handleKeyDown);
+		window.addEventListener("keyup", this.handleKeyUp);
 
-function playSound(event) {
-	let key = document.getElementById(event.key);
-	let audio = document.getElementById(event.keyCode);
+		for (const key of screenKeys) {
+			key.addEventListener("pointerdown", this.handleMouseDown);
+			key.addEventListener("pointerup", this.handleMouseUp);
+		}
+	}
 
-	if (!key && !audio) return;
-	console.log(event.key);
-	key.classList.add("playing");
+	handleKeyDown = (event) => {
+		let key = document.getElementById(event.key);
+		let audio = document.getElementById(event.keyCode);
 
-	audio.currentTime = 0;
-	audio.play();
-}
+		if (!key && !audio) return;
 
-//Removes class from key
-function removeTransform(event) {
-	let key = document.getElementById(event.key);
+		key.classList.add("playing");
 
-	if (!key) return;
+		audio.currentTime = 0;
+		audio.play();
+	};
 
-	key.classList.remove("playing");
-}
+	handleKeyUp = (event) => {
+		let key = document.getElementById(event.key);
 
-window.addEventListener("keydown", playSound);
-window.addEventListener("keyup", removeTransform);
+		if (!key) return;
 
+		key.classList.remove("playing");
+	};
 
-//-------------------Screen KeyBoard--------------------//
+	handleMouseUp = (event) => {
+		let target = event.target.id;
 
-let screenKey = document.querySelectorAll(".key");
+		//if <kbd> or <span> within is clicked
+		if (!event.target.id) target = event.target.parentNode.id;
 
-//loop through all divs and on 'mousedown' play audio with ID that matches ASCII code of div ID.
-screenKey.forEach((key) =>
-	key.addEventListener("mousedown", (event) => {
-		let target = event.target.id; //Path to div id being clicked
+		let key = document.getElementById(target);
+
+		if (!key) return;
+
+		key.classList.remove("playing");
+	};
+
+	handleMouseDown = (event) => {
+		let target = event.target.id;
+
+		//if <kbd> or <span> within is clicked
+		if (!event.target.id) target = event.target.parentNode.id;
+
 		let key = document.getElementById(target);
 		let audio = document.getElementById(target.charCodeAt(0) - 32); //ASCII conversion is 32 above char code
 
@@ -105,17 +69,59 @@ screenKey.forEach((key) =>
 
 		audio.currentTime = 0;
 		audio.play();
-	})
-);
+	};
 
-//loop through all divs remove transform on 'mouseup'.
-screenKey.forEach((key) =>
-	key.addEventListener("mouseup", (event) => {
-		let target = event.target.id;
-		let key = document.getElementById(target);
-
-		if (!key) return;
-
-		key.classList.remove("playing");
-	})
-);
+	render() {
+		return (
+			<>
+				<div className="keys">
+					<div id="a" className="key">
+						<kbd>A</kbd>
+						<span className="sound">clap</span>
+						<audio id="65" src={clap}></audio>
+					</div>
+					<div id="s" className="key">
+						<kbd>S</kbd>
+						<span className="sound">hihat</span>
+						<audio id="83" src={hihat}></audio>
+					</div>
+					<div id="d" className="key">
+						<kbd>D</kbd>
+						<span className="sound">kick</span>
+						<audio id="68" src={kick}></audio>
+					</div>
+					<div id="f" className="key">
+						<kbd>F</kbd>
+						<span className="sound">openhat</span>
+						<audio id="70" src={openhat}></audio>
+					</div>
+					<div id="g" className="key">
+						<kbd>G</kbd>
+						<span className="sound">boom</span>
+						<audio id="71" src={boom}></audio>
+					</div>
+					<div id="h" className="key">
+						<kbd>H</kbd>
+						<span className="sound">ride</span>
+						<audio id="72" src={ride}></audio>
+					</div>
+					<div id="j" className="key">
+						<kbd>J</kbd>
+						<span className="sound">snare</span>
+						<audio id="74" src={snare}></audio>
+					</div>
+					<div id="k" className="key">
+						<kbd>K</kbd>
+						<span className="sound">tom</span>
+						<audio id="75" src={tom}></audio>
+					</div>
+					<div id="l" className="key">
+						<kbd>L</kbd>
+						<span className="sound">tink</span>
+						<audio id="76" src={tink}></audio>
+					</div>
+				</div>
+			</>
+		);
+	}
+}

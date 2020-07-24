@@ -3,7 +3,12 @@ import "./App.css";
 import { Keyboard } from "./components/keyboard/keyboard";
 
 function App() {
-	return <Keyboard />;
+	return (
+		<div className="main-wrapper">
+			<h1>Drumkit App</h1>
+			<Keyboard />
+		</div>
+	);
 }
 
 export default App;
