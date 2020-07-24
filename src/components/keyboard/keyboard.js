@@ -19,6 +19,8 @@ export class Keyboard extends Component {
 		for (const key of screenKeys) {
 			key.addEventListener("pointerdown", this.handleMouseDown);
 			key.addEventListener("pointerup", this.handleMouseUp);
+			key.addEventListener("pointerout", this.handleMouseUp);
+
 		}
 	}
 

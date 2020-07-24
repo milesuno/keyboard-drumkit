@@ -1,7 +1,6 @@
 html {
 	font-size: 10px;
 	background: linear-gradient(to bottom, rgb(29 115 234), rgb(202 227 34))
-
 		bottom center;
 	background-size: cover;
 }
@@ -16,6 +15,7 @@ html {
 .keys {
 	display: flex;
 	flex: 1;
+	flex-wrap: wrap;
 	min-height: 60vh;
 	align-items: center;
 	justify-content: center;
@@ -52,3 +52,4 @@ kbd {
 	letter-spacing: 0.1rem;
 	color: #e9e957;
 }
+
