@@ -76,7 +76,7 @@ export class Keyboard extends Component {
 	render() {
 		return (
 			<>
-				<div className="keys">
+				<div className="keys unselectable">
 					<div id="a" className="key">
 						<kbd>A</kbd>
 						<span className="sound">clap</span>
