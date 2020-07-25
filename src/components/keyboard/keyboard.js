@@ -144,6 +144,7 @@ export class Keyboard extends Component {
 	};
 
 	handleMouseDown = (event) => {
+		let noteStartTime = Date.now() - this.state.recordingStartTime;
 		let target = event.target.id;
 		let codeNumberOffset = 32;
 		//if <kbd> or <span> within is clicked
@@ -155,6 +156,8 @@ export class Keyboard extends Component {
 		); //ASCII conversion is 32 above char code
 
 		if (!key && !audio) return;
+		if (this.state.isRecording) this.record(target, noteStartTime);
+
 		key.classList.add("playing");
 
 		this.playNote(audio, key);
