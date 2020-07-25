@@ -157,7 +157,7 @@ export class Keyboard extends Component {
 		if (!key && !audio) return;
 		key.classList.add("playing");
 
-		this.playNote(audio, target);
+		this.playNote(audio, key);
 	};
 
 	render() {
