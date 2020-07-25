@@ -10,38 +10,124 @@ import snare from "./sounds/snare.wav";
 import tom from "./sounds/tom.wav";
 import tink from "./sounds/tink.wav";
 
+//FIX: Make all controls available without state - set play and delete to display none.
+//TODO: While recording exists controls should be visible - once deleted it should return to just the record button
 export class Keyboard extends Component {
+	constructor(props) {
+		super(props);
+		//state is used to populate data in lg-thumbnail on thumbnail click
+		this.state = {
+			recordingStartTime: "",
+			notes: [],
+			isRecording: false,
+			controlsActive: false,
+		};
+	}
 	componentDidMount() {
+		let controls = document.querySelectorAll(".control");
+		// let stopBtn = document.querySelector(".stop-btn");
+		let playBtn = document.querySelector(".playback-btn");
+		let deleteBtn = document.querySelector(".delete-btn");
+
+		// stopBtn.addEventListener("click", this.stopRecording);
+		playBtn.addEventListener("click", this.playbackRecording);
+		deleteBtn.addEventListener("click", this.deleteRecording);
+
+		// console.log({ controls, stopBtn, playBtn, deleteBtn });
 		let screenKeys = document.querySelectorAll(".key");
+		let recordBtn = document.querySelector(".record-btn");
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
+		recordBtn.addEventListener("click", this.startRecording);
 
 		for (const key of screenKeys) {
 			key.addEventListener("pointerdown", this.handleMouseDown);
 			key.addEventListener("pointerup", this.handleMouseUp);
 			key.addEventListener("pointerout", this.handleMouseUp);
-
+			key.addEventListener("transitionend", (e) =>
+				this.stopNote(e.target)
+			);
 		}
 	}
+
+	startRecording = () => {
+		let recordingStartTime = Date.now();
+		// let recordBtn = document.querySelector(".record-btn");
+
+		this.setState({ recordingStartTime });
+		this.setState({ isRecording: true });
+		this.setState({ controlsActive: true });
+
+		// recordBtn.removeEventListener("click", this.startRecording);
+		// recordBtn.addEventListener("click", this.stopRecording);
+	};
+
+	record = (note, timing) => {
+		// let noteStartTime = Date.now() - this.state.recordinStartTime;
+		let notes = this.state.notes;
+		notes.push({ note, timing });
+		this.setState({ notes });
+		console.log("NOTES:", this.state.notes);
+	};
+
+	stopRecording = () => {
+		// let recordBtn = document.querySelector(".record-btn");
+
+		this.setState({ recordingStartTime: "" });
+		this.setState({ isRecording: false });
+		// recordBtn.removeEventListener("click", this.stopRecording);
+		// recordBtn.addEventListener("click", this.startRecording);
+		// this.playbackRecording();
+	};
+
+	playbackRecording = () => {
+		let notes = this.state.notes;
+		console.log("State:", this.state.notes);
+		console.log({ notes });
+
+		notes.forEach((note) => {
+			let key = document.getElementById(note.note);
+			let audio = document.getElementById(note.note.charCodeAt(0) - 32);
+			// console.log({ audio, key });
+			setTimeout(() => this.playNote(audio, key), note.timing);
+		});
+	};
+
+	deleteRecording = () => {
+		let notes = this.state.notes;
+
+		notes = [];
+
+		this.setState({ notes });
+		this.setState({ controlsActive: false });
+	};
+
+	playNote = (audio, key) => {
+		if (key) key.classList.add("playing");
+		audio.currentTime = 0;
+		audio.play();
+	};
+
+	stopNote = (key) => {
+		console.log({ key });
+		if (key) key.classList.remove("playing");
+	};
 
 	handleKeyDown = (event) => {
 		let key = document.getElementById(event.key);
 		let audio = document.getElementById(event.keyCode);
-
+		let noteStartTime = Date.now() - this.state.recordingStartTime;
+		console.log({ event });
 		if (!key && !audio) return;
-
-		key.classList.add("playing");
-
-		audio.currentTime = 0;
-		audio.play();
+		if (this.state.isRecording) this.record(event.key, noteStartTime);
+		this.playNote(audio, key);
 	};
 
 	handleKeyUp = (event) => {
 		let key = document.getElementById(event.key);
 
 		if (!key) return;
-
-		key.classList.remove("playing");
+		this.stopNote(key);
 	};
 
 	handleMouseUp = (event) => {
@@ -54,28 +140,48 @@ export class Keyboard extends Component {
 
 		if (!key) return;
 
-		key.classList.remove("playing");
+		this.stopNote(key);
 	};
 
 	handleMouseDown = (event) => {
 		let target = event.target.id;
-
+		let codeNumberOffset = 32;
 		//if <kbd> or <span> within is clicked
 		if (!event.target.id) target = event.target.parentNode.id;
 
 		let key = document.getElementById(target);
-		let audio = document.getElementById(target.charCodeAt(0) - 32); //ASCII conversion is 32 above char code
+		let audio = document.getElementById(
+			target.charCodeAt(0) - codeNumberOffset
+		); //ASCII conversion is 32 above char code
 
 		if (!key && !audio) return;
 		key.classList.add("playing");
 
-		audio.currentTime = 0;
-		audio.play();
+		this.playNote(audio, target);
 	};
 
 	render() {
 		return (
 			<>
+				<div className="controls">
+					{/* {!this.state.isRecording ? ( */}
+						<button
+							className="record-btn control"
+							// onClick={this.startRecording}
+						>
+							Record
+						</button>
+					{/* ) : ( */}
+						<button
+							className="stop-btn control"
+							// onClick={this.stopRecording}
+						>
+							Stop Recording
+						</button>
+					{/* )} */}
+					<button className="playback-btn control">Playback</button>
+					<button className="delete-btn control">Delete</button>
+				</div>
 				<div className="keys unselectable">
 					<div id="a" className="key">
 						<kbd>A</kbd>

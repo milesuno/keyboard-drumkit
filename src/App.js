@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { Keyboard } from "./components/keyboard/keyboard";
 
+//TODO: Add audio recording 
 function App() {
 	return (
 		<div className="main-wrapper">
