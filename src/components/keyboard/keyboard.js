@@ -20,7 +20,7 @@ export class Keyboard extends Component {
 			recordingStartTime: "",
 			notes: [],
 			isRecording: false,
-			controlsActive: false,
+			// controlsActive: false,
 		};
 	}
 	componentDidMount() {
@@ -35,10 +35,10 @@ export class Keyboard extends Component {
 
 		// console.log({ controls, stopBtn, playBtn, deleteBtn });
 		let screenKeys = document.querySelectorAll(".key");
-		let recordBtn = document.querySelector(".record-btn");
+		// let recordBtn = document.querySelector(".record-btn");
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
-		recordBtn.addEventListener("click", this.startRecording);
+		// recordBtn.addEventListener("click", this.startRecording);
 
 		for (const key of screenKeys) {
 			key.addEventListener("pointerdown", this.handleMouseDown);
@@ -53,14 +53,30 @@ export class Keyboard extends Component {
 	startRecording = () => {
 		let recordingStartTime = Date.now();
 		// let recordBtn = document.querySelector(".record-btn");
-
+		console.log("START RECORDING");
 		this.setState({ recordingStartTime });
 		this.setState({ isRecording: true });
-		this.setState({ controlsActive: true });
-
+		// this.setState({ controlsActive: true });
+		this.setControlStyle();
 		// recordBtn.removeEventListener("click", this.startRecording);
 		// recordBtn.addEventListener("click", this.stopRecording);
 	};
+
+	setControlStyle = () => {
+		let playBtn = document.querySelector(".playback-btn");
+		let deleteBtn = document.querySelector(".delete-btn");
+		playBtn.classList.add("active");
+		deleteBtn.classList.add("active");
+
+	};
+
+	unsetControlStyle = () => {
+		let playBtn = document.querySelector(".playback-btn");
+		let deleteBtn = document.querySelector(".delete-btn");
+		playBtn.classList.remove("active");
+		deleteBtn.classList.remove("active");
+	};
+
 
 	record = (note, timing) => {
 		// let noteStartTime = Date.now() - this.state.recordinStartTime;
@@ -72,12 +88,14 @@ export class Keyboard extends Component {
 
 	stopRecording = () => {
 		// let recordBtn = document.querySelector(".record-btn");
+		console.log("STOP RECORDING");
 
 		this.setState({ recordingStartTime: "" });
 		this.setState({ isRecording: false });
 		// recordBtn.removeEventListener("click", this.stopRecording);
 		// recordBtn.addEventListener("click", this.startRecording);
 		// this.playbackRecording();
+		// this.unsetControlStyle();
 	};
 
 	playbackRecording = () => {
@@ -167,21 +185,21 @@ export class Keyboard extends Component {
 		return (
 			<>
 				<div className="controls">
-					{/* {!this.state.isRecording ? ( */}
+					{!this.state.isRecording ? (
 						<button
 							className="record-btn control"
-							// onClick={this.startRecording}
+							onClick={this.startRecording}
 						>
 							Record
 						</button>
-					{/* ) : ( */}
+					) : (
 						<button
 							className="stop-btn control"
-							// onClick={this.stopRecording}
+							onClick={this.stopRecording}
 						>
 							Stop Recording
 						</button>
-					{/* )} */}
+					)}
 					<button className="playback-btn control">Playback</button>
 					<button className="delete-btn control">Delete</button>
 				</div>

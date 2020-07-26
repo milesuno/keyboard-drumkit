@@ -1,3 +1,13 @@
+@keyframes flash {
+	0% {
+		background: #f44336;
+	}
+	
+	100% {
+		background: #f4433678;
+	}
+}
+
 html {
 	font-size: 10px;
 	background: linear-gradient(to bottom, rgb(29 115 234), rgb(202 227 34))
@@ -53,12 +63,42 @@ kbd {
 	color: #e9e957;
 }
 
-.unselectable {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+.controls {
+	display: flex;
 }
 
+.control {
+	padding: 10px;
+	border: solid 3px black;
+	border-radius: 0.5rem;
+	background: #ffffff7d;
+}
+
+.stop-btn {
+	background: red;
+	animation: flash 1s infinite;
+}
+.playback-btn {
+	display: none;
+}
+.delete-btn {
+	display: none;
+}
+.active {
+	display: flex;
+}
+
+.unselectable {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@media (max-width: 500px) {
+	.key{
+		margin: 0.3rem;
+	}
+}
