@@ -55,12 +55,12 @@ export class Keyboard extends Component {
 		deleteBtn.classList.add("active");
 	};
 
-	// unsetControlStyle = () => {
-	// 	let playBtn = document.querySelector(".playback-btn");
-	// 	let deleteBtn = document.querySelector(".delete-btn");
-	// 	playBtn.classList.remove("active");
-	// 	deleteBtn.classList.remove("active");
-	// };
+	unsetControlStyle = () => {
+		let playBtn = document.querySelector(".playback-btn");
+		let deleteBtn = document.querySelector(".delete-btn");
+		playBtn.classList.remove("active");
+		deleteBtn.classList.remove("active");
+	};
 
 	record = (note, timing) => {
 		let notes = this.state.notes;
@@ -91,6 +91,7 @@ export class Keyboard extends Component {
 		let notes = this.state.notes;
 		notes = [];
 		this.setState({ notes });
+		this.unsetControlStyle();
 	};
 
 	playNote = (audio, key) => {
